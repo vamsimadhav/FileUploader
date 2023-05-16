@@ -44,7 +44,6 @@ public class LoginFragment extends Fragment {
 
     private GoogleSignInClient mGoogleSignInClient;
     private static final String TAG = "LoginFragment";
-    private static final int RC_SIGN_IN = 9001;
 
     @Nullable
     @Override
