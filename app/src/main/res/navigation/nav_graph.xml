@@ -15,5 +15,18 @@
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.example.fileuploader.UploadFragment"
-        android:label="UploadFragment" />
+        android:label="UploadFragment" >
+        <action
+            android:id="@+id/action_uploadFragment_to_shareFragment"
+            app:destination="@id/shareFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shareFragment"
+        android:name="com.example.fileuploader.ShareFragment"
+        android:label="ShareFragment" >
+        <argument
+            android:name="fileId"
+            app:argType="string"
+            android:defaultValue="null" />
+    </fragment>
 </navigation>

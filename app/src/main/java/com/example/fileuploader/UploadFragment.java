@@ -1,35 +1,30 @@
 package com.example.fileuploader;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.example.fileuploader.ShareFragmentArgs;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.http.FileContent;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 
 public class UploadFragment extends Fragment {
@@ -55,46 +50,29 @@ public class UploadFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Button button = getActivity().findViewById(R.id.button);
 
-        documentPicker = registerForActivityResult(new CustomDocumentContract(), new ActivityResultCallback<Uri>() {
-            @Override
-            public void onActivityResult(Uri uri) {
-                if (uri != null) {
-                    DriveServiceHelper driveServiceHelper = new DriveServiceHelper(getDriveService(),getContext());
-                    String mimeType = getMimeTypeFromUri(uri);
-                    driveServiceHelper.uploadFileToDrive(uri, mimeType, new UploadListener() {
-                        @Override
-                        public void onCompletion(boolean success) {
-                            if(success){
-                                Navigation.findNavController(getView()).navigate(R.id.loginFragment);
-                            }
-                        }
-                    });
-                }
+        documentPicker = registerForActivityResult(new CustomDocumentContract(), uri -> {
+            if (uri != null) {
+                DriveServiceHelper driveServiceHelper = new DriveServiceHelper(Helper.getDriveService(mAccount,getContext()),getContext());
+                String mimeType = Helper.getMimeTypeFromUri(uri,getContext());
+                driveServiceHelper.uploadFileToDrive(uri, mimeType, (success, fileId) -> {
+                    if(success && fileId != null){
+                       try {
+                           NavController navController = Navigation.findNavController(getView());
+                           Bundle args = new com.example.fileuploader.ShareFragmentArgs.Builder()
+                                   .setFileId(fileId)
+                                   .build()
+                                   .toBundle();
+                           navController.navigate(R.id.shareFragment,args);
+                       } catch (Exception e){
+                           Log.d("Navigation",e.getMessage());
+                           e.printStackTrace();
+                       }
+                    }
+                });
             }
         });
 
         button.setOnClickListener(view1 -> documentPicker.launch(mimeTypes));
-    }
-
-    private Drive getDriveService(){
-        mAccount = GoogleSignIn.getLastSignedInAccount(getContext());
-        if(mAccount != null){
-            GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
-            credential.setSelectedAccount(mAccount.getAccount());
-            return new Drive.Builder(
-                    AndroidHttp.newCompatibleTransport(),
-                    JacksonFactory.getDefaultInstance(),
-                    credential
-            ).setApplicationName(getString(R.string.app_name))
-                    .build();
-        }
-        return null;
-    }
-
-    private String getMimeTypeFromUri(Uri uri) {
-        ContentResolver contentResolver = getContext().getContentResolver();
-        String mimeType = contentResolver.getType(uri);
-        return mimeType;
     }
 
     //Creating a Custom Contract for Allowing of Selection of {.docx, .xlxs, .txt } documents only

@@ -1,5 +1,5 @@
 package com.example.fileuploader;
 
 public interface UploadListener {
-    void onCompletion(boolean success);
+    void onCompletion(boolean success,String fileId);
 }
