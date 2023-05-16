@@ -1,13 +1,21 @@
 package com.example.fileuploader;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,6 +25,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ShareFragment extends Fragment {
     private String fileId;
@@ -41,6 +50,23 @@ public class ShareFragment extends Fragment {
             }
         });
         task.execute(fileId);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),WebViewActivity.class);
+                intent.putExtra("publicUrl",textView.getText());
+                startActivity(intent);
+            }
+        });
+
+        Button shareButton = getActivity().findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareUrl(textView.getText().toString());
+            }
+        });
     }
 
     public interface GetPublicUrlCallback {
@@ -75,6 +101,25 @@ public class ShareFragment extends Fragment {
         protected void onPostExecute(String publicUrl) {
             // Pass the publicUrl to the callback
             mCallback.onPublicUrlFetched(publicUrl);
+        }
+    }
+
+    private void shareUrl(String url){
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, url);
+
+// Check if there are any apps that can handle the sharing Intent
+        PackageManager packageManager = getContext().getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(shareIntent, 0);
+        boolean isIntentSafe = activities.size() > 0;
+
+// Start the sharing Intent if there are suitable apps available
+        if (isIntentSafe) {
+            startActivity(Intent.createChooser(shareIntent, "Share URL via"));
+        } else {
+            // Handle the case when no apps can handle the sharing Intent
+            Toast.makeText(getContext(), "No apps available to handle sharing", Toast.LENGTH_SHORT).show();
         }
     }
 }

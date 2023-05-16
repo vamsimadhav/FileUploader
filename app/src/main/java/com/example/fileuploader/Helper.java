@@ -38,18 +38,6 @@ public class Helper {
         return null;
     }
 
-//    public static String getPublicUrl(String fileId, Drive mDriveService) {
-//        String publicUrl = null;
-//        try {
-//            File file = mDriveService.files().get(fileId).setFields("webViewLink").execute();
-//            publicUrl = file.getWebViewLink();
-//        } catch (Exception e){
-//            Log.d("PUBLIC",e.getMessage());
-//            e.printStackTrace();
-//        }
-//        return publicUrl;
-//    }
-
     public static String getMimeTypeFromUri(Uri uri,Context mContext) {
         ContentResolver contentResolver = mContext.getContentResolver();
         String mimeType = contentResolver.getType(uri);
