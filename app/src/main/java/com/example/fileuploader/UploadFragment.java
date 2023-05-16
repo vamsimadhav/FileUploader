@@ -58,7 +58,7 @@ public class UploadFragment extends Fragment {
             public void onActivityResult(Uri uri) {
                 if (uri != null) {
                     DriveServiceHelper driveServiceHelper = new DriveServiceHelper(getDriveService(),getContext());
-                    driveServiceHelper.uploadFileToDrive(uri,"application/pdf");
+                    driveServiceHelper.uploadFileToDrive(uri, "application/pdf");
                 }
             }
         });
