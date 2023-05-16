@@ -9,7 +9,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+
+import androidx.navigation.Navigation;
 
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
@@ -27,12 +30,15 @@ public class DriveServiceHelper {
     private final Context mContext;
     private String mMimeType;
 
+    private UploadListener uploadListener;
+
     public DriveServiceHelper(Drive mDriveService, Context context){
         this.mDriveService = mDriveService;
         this.mContext = context;
     }
 
-    public void uploadFileToDrive(final Uri fileUri, final String mimeType) {
+    public void uploadFileToDrive(final Uri fileUri, final String mimeType,UploadListener uploadListener) {
+        this.uploadListener = uploadListener;
         mMimeType = mimeType;
         new UploadFileTask().execute(fileUri);
     }
@@ -121,9 +127,11 @@ public class DriveServiceHelper {
         protected void onPostExecute(String fileId) {
             progressDialog.dismiss();
             if (fileId != null) {
+                uploadListener.onCompletion(true);
                 Toast.makeText(mContext, "File uploaded successfully", Toast.LENGTH_SHORT).show();
                 Log.d("TAGSA", "File uploaded: " + fileId);
             } else {
+                uploadListener.onCompletion(false);
                 Toast.makeText(mContext, "File upload failed", Toast.LENGTH_SHORT).show();
                 Log.d("TAGSA", "File upload failed");
             }

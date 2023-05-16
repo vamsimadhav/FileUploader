@@ -1,5 +1,6 @@
 package com.example.fileuploader;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -58,7 +60,15 @@ public class UploadFragment extends Fragment {
             public void onActivityResult(Uri uri) {
                 if (uri != null) {
                     DriveServiceHelper driveServiceHelper = new DriveServiceHelper(getDriveService(),getContext());
-                    driveServiceHelper.uploadFileToDrive(uri, "application/pdf");
+                    String mimeType = getMimeTypeFromUri(uri);
+                    driveServiceHelper.uploadFileToDrive(uri, mimeType, new UploadListener() {
+                        @Override
+                        public void onCompletion(boolean success) {
+                            if(success){
+                                Navigation.findNavController(getView()).navigate(R.id.loginFragment);
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -79,6 +89,12 @@ public class UploadFragment extends Fragment {
                     .build();
         }
         return null;
+    }
+
+    private String getMimeTypeFromUri(Uri uri) {
+        ContentResolver contentResolver = getContext().getContentResolver();
+        String mimeType = contentResolver.getType(uri);
+        return mimeType;
     }
 
     //Creating a Custom Contract for Allowing of Selection of {.docx, .xlxs, .txt } documents only
