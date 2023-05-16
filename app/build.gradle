@@ -39,7 +39,20 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     def nav_version = "2.5.3"
-
+    //Navigation
     implementation("androidx.navigation:navigation-fragment:$nav_version")
     implementation("androidx.navigation:navigation-ui:$nav_version")
+    //Play Services Auth
+    implementation "com.google.android.gms:play-services-auth:20.5.0"
+    //Google Drive API
+    implementation ("com.google.apis:google-api-services-drive:v3-rev136-1.25.0")
+            {
+                exclude group: "org.apache.httpcomponents"
+            }
+    implementation('com.google.api-client:google-api-client-android:1.23.0')
+            {
+                exclude group: 'org.apache.httpcomponents'
+            }
+    //Added for GUAVA Error Caused due to Google API's
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 }
