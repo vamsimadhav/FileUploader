@@ -23,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.Permission;
 
 import java.io.IOException;
 import java.util.List;
@@ -88,8 +89,20 @@ public class ShareFragment extends Fragment {
             String fileId = params[0];
             String publicUrl = null;
             try {
+                Permission permission = new Permission();
+                permission.setType("anyone");
+                permission.setRole("reader");
+                permission.setAllowFileDiscovery(false);
+
+                // Insert the permission for the file
+                mDriveService.permissions().create(fileId, permission).execute();
+
+                // Get the file with the updated permissions
                 File file = mDriveService.files().get(fileId).setFields("webViewLink").execute();
+
+                // Retrieve the public URL
                 publicUrl = file.getWebViewLink();
+
             } catch (Exception e) {
                 Log.d("PUBLIC", e.getMessage());
                 e.printStackTrace();
