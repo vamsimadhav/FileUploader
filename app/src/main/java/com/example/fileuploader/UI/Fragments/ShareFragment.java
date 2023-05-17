@@ -36,17 +36,11 @@ public class ShareFragment extends Fragment {
         TextView textView = getActivity().findViewById(R.id.public_url);
         textView.setText(publicUrl);
 
-        textView.setOnClickListener(view12 -> {
-            NavController controller = Navigation.findNavController(getView());
-            Bundle args2 = new WebViewFragmentArgs.Builder()
-                    .setPublicUrl(publicUrl)
-                    .build()
-                    .toBundle();
-            controller.navigate(R.id.webViewFragment,args2);
-        });
-
         Button shareButton = getActivity().findViewById(R.id.shareButton);
         shareButton.setOnClickListener(view1 -> shareUrl(publicUrl));
+
+        Button newUploadButton = getActivity().findViewById(R.id.newUploadbutton);
+        newUploadButton.setOnClickListener(view12 -> Navigation.findNavController(getView()).navigate(R.id.uploadFragment));
     }
 
     private void shareUrl(String url){

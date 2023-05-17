@@ -2,16 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/uploadFragment">
 
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.fileuploader.UI.Fragments.LoginFragment"
-        android:label="LoginFragment" >
-        <action
-            android:id="@+id/action_loginFragment_to_uploadFragment"
-            app:destination="@id/uploadFragment" />
-    </fragment>
     <fragment
         android:id="@+id/uploadFragment"
         android:name="com.example.fileuploader.UI.Fragments.UploadFragment"
@@ -29,19 +21,7 @@
             app:argType="string"
             android:defaultValue="null" />
         <action
-            android:id="@+id/action_shareFragment_to_webViewFragment"
-            app:destination="@id/webViewFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/webViewFragment"
-        android:name="com.example.fileuploader.UI.Fragments.WebViewFragment"
-        android:label="WebViewFragment" >
-        <action
-            android:id="@+id/action_webViewFragment_to_uploadFragment"
+            android:id="@+id/action_shareFragment_to_uploadFragment"
             app:destination="@id/uploadFragment" />
-        <argument
-            android:name="publicUrl"
-            app:argType="string"
-            android:defaultValue="null" />
     </fragment>
 </navigation>
