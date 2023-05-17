@@ -23,7 +23,7 @@ public class Helper {
             "application/pdf" ,                       // PDF MIME
             "application/msword",                     // MS Word MIME
             "application/vnd.ms-excel",               // MS EXCEL MIME
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document" //.xlxs MIME,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" //.xlxs MIME,
     };
     public static Drive getDriveService(Context mContext){
         GoogleSignInAccount mAccount = GoogleSignIn.getLastSignedInAccount(mContext);
