@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.fileuploader.LoginFragment"
+        android:name="com.example.fileuploader.UI.Fragments.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_uploadFragment"
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/uploadFragment"
-        android:name="com.example.fileuploader.UploadFragment"
+        android:name="com.example.fileuploader.UI.Fragments.UploadFragment"
         android:label="UploadFragment" >
         <action
             android:id="@+id/action_uploadFragment_to_shareFragment"
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/shareFragment"
-        android:name="com.example.fileuploader.ShareFragment"
+        android:name="com.example.fileuploader.UI.Fragments.ShareFragment"
         android:label="ShareFragment" >
         <argument
             android:name="fileId"

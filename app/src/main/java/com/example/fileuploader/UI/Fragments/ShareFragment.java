@@ -1,6 +1,5 @@
-package com.example.fileuploader;
+package com.example.fileuploader.UI.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -10,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,17 +16,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.example.fileuploader.Helper;
+import com.example.fileuploader.R;
+import com.example.fileuploader.UI.Fragments.ShareFragmentArgs;
+import com.example.fileuploader.WebViewActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;
 
-import java.io.IOException;
 import java.util.List;
 
 public class ShareFragment extends Fragment {
     private String fileId;
+    private String publicUrl;
 
     @Nullable
     @Override
@@ -47,6 +49,7 @@ public class ShareFragment extends Fragment {
         Drive mDriveService = Helper.getDriveService(mAccount,getContext());
         GetPublicUrlTask task = new GetPublicUrlTask(mDriveService, publicUrl -> {
             if(publicUrl != null){
+                this.publicUrl = publicUrl;
                 textView.setText(publicUrl);
             }
         });
@@ -55,19 +58,14 @@ public class ShareFragment extends Fragment {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),WebViewActivity.class);
-                intent.putExtra("publicUrl",textView.getText());
+                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("publicUrl",publicUrl);
                 startActivity(intent);
             }
         });
 
         Button shareButton = getActivity().findViewById(R.id.shareButton);
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                shareUrl(textView.getText().toString());
-            }
-        });
+        shareButton.setOnClickListener(view1 -> shareUrl(publicUrl));
     }
 
     public interface GetPublicUrlCallback {

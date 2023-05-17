@@ -1,4 +1,4 @@
-package com.example.fileuploader;
+package com.example.fileuploader.UI.Activitys;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.fileuploader.R;
 
 import org.w3c.dom.Document;
 

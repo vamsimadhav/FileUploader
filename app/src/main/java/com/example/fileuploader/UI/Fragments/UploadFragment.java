@@ -1,4 +1,4 @@
-package com.example.fileuploader;
+package com.example.fileuploader.UI.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,21 +15,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
-import com.example.fileuploader.ShareFragmentArgs;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.example.fileuploader.DriveServiceHelper;
+import com.example.fileuploader.Helper;
+import com.example.fileuploader.R;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
-
-import java.util.Collections;
 
 public class UploadFragment extends Fragment {
-
-    private static final String FILE_NAME_BACKUPP = "File_Uploader";
     private ActivityResultLauncher<String[]> documentPicker;
     private GoogleSignInAccount mAccount;
     private final String[] mimeTypes = new String[]{
@@ -58,7 +49,7 @@ public class UploadFragment extends Fragment {
                     if(success && fileId != null){
                        try {
                            NavController navController = Navigation.findNavController(getView());
-                           Bundle args = new com.example.fileuploader.ShareFragmentArgs.Builder()
+                           Bundle args = new ShareFragmentArgs.Builder()
                                    .setFileId(fileId)
                                    .build()
                                    .toBundle();
