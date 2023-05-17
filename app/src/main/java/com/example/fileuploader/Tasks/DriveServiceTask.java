@@ -10,7 +10,6 @@ import android.content.Context;
 import java.io.FileOutputStream;
 import java.util.Collections;
 import java.util.List;
-
 import android.app.ProgressDialog;
 import com.example.fileuploader.Helper;
 import com.google.api.services.drive.Drive;
@@ -58,9 +57,12 @@ public class DriveServiceTask {
                 }
                 InputStream inputStream = mContext.getContentResolver().openInputStream(fileUri);
                 if (inputStream != null) {
+                    //Fetching the Folder Name using the helper
                     String fileName = Helper.getFileNameFromUri(fileUri,mContext);
                     java.io.File fileContent = new java.io.File(mContext.getCacheDir(), fileName);
                     FileOutputStream outputStream = new FileOutputStream(fileContent);
+
+                    //Reading and Outputting the contents of the file
                     byte[] buffer = new byte[4096];
                     int bytesRead;
                     long totalBytesRead = 0;
@@ -73,15 +75,17 @@ public class DriveServiceTask {
                     }
                     outputStream.close();
                     inputStream.close();
-
+                    //Setting the type of filecontent to be saved on drive
                     FileContent mediaContent = new FileContent(mMimeType, fileContent);
 
+                    //Creating the file to be uploaded and setting its parameters
                     File body = new File();
                     List<String> parents = Collections.singletonList(folderId);
-                    body.setParents(parents);
-                    body.setName(fileName);
-                    body.setMimeType(mMimeType);
+                    body.setParents(parents); // Setting that it should be inside a particular folder
+                    body.setName(fileName); //Setting folder name
+                    body.setMimeType(mMimeType); //Setting the File Type ie.. .docx, .xlxs, .txt
 
+                    //Using drive service to upload the file to cloud
                     File uploadedFile = mDriveService.files().create(body, mediaContent).execute();
                     Log.d("SUCCESS", "File uploaded: " + uploadedFile.getId());
 
@@ -118,6 +122,7 @@ public class DriveServiceTask {
 
     private String getFolderIdByName(String folderName) {
         try {
+            //Using inbuilt file search and querying for the file if present
             FileList fileList = mDriveService.files().list()
                     .setQ("mimeType='application/vnd.google-apps.folder' and name='" + folderName + "'")
                     .execute();
@@ -126,7 +131,7 @@ public class DriveServiceTask {
                 return folders.get(0).getId();
             }
         } catch (IOException e) {
-            Log.d("AAA", e.getMessage());
+            Log.d("FolderName Issue", e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -134,6 +139,7 @@ public class DriveServiceTask {
 
     private String createFolder(String folderName, String parentFolderId) {
         try {
+            //Creating the folder in local
             File folderMetadata = new File();
             folderMetadata.setName(folderName);
             folderMetadata.setMimeType("application/vnd.google-apps.folder");
@@ -142,11 +148,11 @@ public class DriveServiceTask {
                 List<String> parents = Collections.singletonList(parentFolderId);
                 folderMetadata.setParents(parents);
             }
-
+            //Telling the drive to create in cloud
             File createdFolder = mDriveService.files().create(folderMetadata).execute();
             return createdFolder.getId();
         } catch (IOException e) {
-            Log.d("AAA", e.getMessage());
+            Log.d("FolderId Issue", e.getMessage());
             e.printStackTrace();
             return null;
         }
