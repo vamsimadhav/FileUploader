@@ -1,9 +1,11 @@
-package com.example.fileuploader;
+package com.example.fileuploader.Tasks;
 
 import android.util.Log;
 import android.os.AsyncTask;
 import android.content.Context;
 import android.app.ProgressDialog;
+
+import com.example.fileuploader.Helper;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;

@@ -14,8 +14,8 @@ import androidx.navigation.Navigation;
 import com.example.fileuploader.Helper;
 import androidx.navigation.NavController;
 import com.google.api.services.drive.Drive;
-import com.example.fileuploader.DriveServiceTask;
-import com.example.fileuploader.GetPublicUrlTask;
+import com.example.fileuploader.Tasks.DriveServiceTask;
+import com.example.fileuploader.Tasks.GetPublicUrlTask;
 import androidx.activity.result.ActivityResultLauncher;
 import com.example.fileuploader.Custom.CustomDocumentContract;
 

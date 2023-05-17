@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.Scope;
 import androidx.activity.result.ActivityResult;
 import com.google.api.services.drive.DriveScopes;
@@ -27,9 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
-
 public class LoginFragment extends Fragment {
-
     private GoogleSignInClient mGoogleSignInClient;
     private static final String TAG = "LoginFragment";
 
@@ -99,7 +96,7 @@ public class LoginFragment extends Fragment {
         super.onStart();
         // Check if the user is already signed in and all required scopes are granted
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
-        if (account != null && GoogleSignIn.hasPermissions(account, new Scope(Scopes.DRIVE_APPFOLDER))) {
+        if (account != null) {
             updateUI(account);
         } else {
             updateUI(null);
