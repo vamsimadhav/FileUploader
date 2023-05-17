@@ -59,10 +59,10 @@ public class Helper {
         return fileName;
     }
 
-    public static ProgressDialog progressHelper(Context mContext){
+    public static ProgressDialog progressHelper(Context mContext,String message ,int style){
         ProgressDialog progressDialog = new ProgressDialog(mContext);
-        progressDialog.setMessage("Uploading file...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMessage(message);
+        progressDialog.setProgressStyle(style);
         progressDialog.setCancelable(false);
         progressDialog.show();
         return progressDialog;

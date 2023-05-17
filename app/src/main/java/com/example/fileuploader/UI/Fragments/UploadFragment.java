@@ -1,5 +1,6 @@
 package com.example.fileuploader.UI.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -96,12 +97,19 @@ public class UploadFragment extends Fragment {
 
     private class GetPublicUrlTask extends AsyncTask<String, Void, String> {
 
-        private Drive mDriveService;
-        private PublicUrlCallback mCallback;
+        private final Drive mDriveService;
+        private final PublicUrlCallback mCallback;
+        private ProgressDialog progressDialog;
 
         public GetPublicUrlTask(Drive driveService, PublicUrlCallback callback) {
             this.mDriveService = driveService;
             this.mCallback = callback;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = Helper.progressHelper(getContext(),"Fetching Public URL",ProgressDialog.STYLE_SPINNER);
         }
 
         @Override
@@ -133,6 +141,7 @@ public class UploadFragment extends Fragment {
         @Override
         protected void onPostExecute(String publicUrl) {
             // Pass the publicUrl to the callback
+            progressDialog.dismiss();
             mCallback.onPublicUrlFetched(publicUrl);
         }
     }

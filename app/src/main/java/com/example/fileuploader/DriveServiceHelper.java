@@ -37,7 +37,7 @@ public class DriveServiceHelper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = Helper.progressHelper(mContext);
+            progressDialog = Helper.progressHelper(mContext,"Uploading File",ProgressDialog.STYLE_SPINNER);
         }
 
         @Override
