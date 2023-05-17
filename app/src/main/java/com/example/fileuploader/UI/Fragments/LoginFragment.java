@@ -1,37 +1,32 @@
 package com.example.fileuploader.UI.Fragments;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.os.Bundle;
 import android.widget.Button;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import android.view.ViewGroup;
+import android.content.Intent;
+import android.content.Context;
+import com.example.fileuploader.R;
+import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-
-import com.example.fileuploader.R;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.services.drive.DriveScopes;
 import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.Scope;
+import androidx.activity.result.ActivityResult;
+import com.google.api.services.drive.DriveScopes;
+import com.google.android.gms.common.api.ApiException;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import androidx.activity.result.contract.ActivityResultContracts;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
-import java.util.Collections;
 
 public class LoginFragment extends Fragment {
 

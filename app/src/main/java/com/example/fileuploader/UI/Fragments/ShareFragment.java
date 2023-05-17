@@ -16,11 +16,8 @@ import android.content.pm.ResolveInfo;
 import androidx.fragment.app.Fragment;
 import android.content.pm.PackageManager;
 import com.example.fileuploader.WebViewActivity;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 public class ShareFragment extends Fragment {
-    private String publicUrl;
 
     @Nullable
     @Override
@@ -33,7 +30,7 @@ public class ShareFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //Args to get public url
         ShareFragmentArgs args = ShareFragmentArgs.fromBundle(getArguments());
-        publicUrl = args.getPublicUrl();
+        String publicUrl = args.getPublicUrl();
 
         TextView textView = getActivity().findViewById(R.id.public_url);
         textView.setText(publicUrl);

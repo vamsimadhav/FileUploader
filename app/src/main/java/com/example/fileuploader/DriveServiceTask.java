@@ -1,27 +1,26 @@
 package com.example.fileuploader;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.example.fileuploader.Interface.UploadListener;
-import com.google.api.client.http.FileContent;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import android.widget.Toast;
+import android.os.AsyncTask;
+import android.content.Context;
+import java.io.FileOutputStream;
+import android.app.ProgressDialog;
+import com.google.api.services.drive.Drive;
+import com.google.api.client.http.FileContent;
+import com.google.api.services.drive.model.File;
+import com.example.fileuploader.Interface.UploadListener;
 
-public class DriveServiceHelper {
+public class DriveServiceTask {
     private final Drive mDriveService;
     private final Context mContext;
     private String mMimeType;
     private UploadListener uploadListener;
 
-    public DriveServiceHelper(Drive mDriveService, Context context){
+    public DriveServiceTask(Drive mDriveService, Context context){
         this.mDriveService = mDriveService;
         this.mContext = context;
     }
@@ -37,7 +36,7 @@ public class DriveServiceHelper {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = Helper.progressHelper(mContext,"Uploading File",ProgressDialog.STYLE_SPINNER);
+            progressDialog = Helper.progressHelper(mContext,"Uploading File",ProgressDialog.STYLE_HORIZONTAL);
         }
 
         @Override
@@ -46,7 +45,8 @@ public class DriveServiceHelper {
             try {
                 InputStream inputStream = mContext.getContentResolver().openInputStream(fileUri);
                 if (inputStream != null) {
-                    java.io.File fileContent = new java.io.File(mContext.getCacheDir(),Helper.getFileNameFromUri(fileUri,mContext));
+                    String fileName = Helper.getFileNameFromUri(fileUri,mContext);
+                    java.io.File fileContent = new java.io.File(mContext.getCacheDir(), fileName);
                     FileOutputStream outputStream = new FileOutputStream(fileContent);
                     byte[] buffer = new byte[4096];
                     int bytesRead;
@@ -64,19 +64,19 @@ public class DriveServiceHelper {
                     FileContent mediaContent = new FileContent(mMimeType, fileContent);
 
                     File body = new File();
-                    body.setName(Helper.getFileNameFromUri(fileUri,mContext));
+                    body.setName(fileName);
                     body.setMimeType(mMimeType);
 
                     File uploadedFile = mDriveService.files().create(body, mediaContent).execute();
-                    Log.d("MSD", "File uploaded: " + uploadedFile.getId());
+                    Log.d("SUCCESS", "File uploaded: " + uploadedFile.getId());
 
                     return uploadedFile.getId();
                 } else {
-                    Log.d("TAGSA", "Input stream is null");
+                    Log.d("FILE ISSUE FAILURE", "Input stream is null");
                     return null;
                 }
             } catch (IOException e) {
-                Log.d("AAA", e.getMessage());
+                Log.d("FAILURE", e.getMessage());
                 e.printStackTrace();
                 return null;
             }
@@ -94,11 +94,9 @@ public class DriveServiceHelper {
             if (fileId != null) {
                 uploadListener.onCompletion(true,fileId);
                 Toast.makeText(mContext, "File uploaded successfully", Toast.LENGTH_SHORT).show();
-                Log.d("TAGSA", "File uploaded: " + fileId);
             } else {
                 uploadListener.onCompletion(false,null);
                 Toast.makeText(mContext, "File upload failed", Toast.LENGTH_SHORT).show();
-                Log.d("TAGSA", "File upload failed");
             }
         }
     }

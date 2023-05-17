@@ -1,25 +1,32 @@
 package com.example.fileuploader;
 
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
+import android.net.Uri;
+import java.util.Collections;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.provider.OpenableColumns;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
-import java.util.Collections;
+import com.google.api.services.drive.DriveScopes;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 public class Helper {
 
-    public static Drive getDriveService(GoogleSignInAccount mAccount, Context mContext){
-        mAccount = GoogleSignIn.getLastSignedInAccount(mContext);
+    public static final String[] mimeTypes = new String[]{
+            "text/*",                                 // Text Document MIME
+            "application/pdf" ,                       // PDF MIME
+            "application/msword",                     // MS Word MIME
+            "application/vnd.ms-excel",               // MS EXCEL MIME
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document" //.xlxs MIME,
+    };
+    public static Drive getDriveService(Context mContext){
+        GoogleSignInAccount mAccount = GoogleSignIn.getLastSignedInAccount(mContext);
         if(mAccount != null){
             GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(DriveScopes.DRIVE_FILE));
             credential.setSelectedAccount(mAccount.getAccount());
