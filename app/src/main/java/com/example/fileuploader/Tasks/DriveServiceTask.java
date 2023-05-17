@@ -8,12 +8,16 @@ import android.widget.Toast;
 import android.os.AsyncTask;
 import android.content.Context;
 import java.io.FileOutputStream;
+import java.util.Collections;
+import java.util.List;
+
 import android.app.ProgressDialog;
 import com.example.fileuploader.Helper;
 import com.google.api.services.drive.Drive;
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.model.File;
 import com.example.fileuploader.Interface.UploadListener;
+import com.google.api.services.drive.model.FileList;
 
 public class DriveServiceTask {
     private final Drive mDriveService;
@@ -44,6 +48,14 @@ public class DriveServiceTask {
         protected String doInBackground(Uri... params) {
             Uri fileUri = params[0];
             try {
+                // Check if the folder exists
+                String folderName = "FileUploader";
+                String folderId = getFolderIdByName(folderName);
+
+                // If the folder doesn't exist, create it
+                if (folderId == null) {
+                    folderId = createFolder(folderName, null);
+                }
                 InputStream inputStream = mContext.getContentResolver().openInputStream(fileUri);
                 if (inputStream != null) {
                     String fileName = Helper.getFileNameFromUri(fileUri,mContext);
@@ -65,6 +77,8 @@ public class DriveServiceTask {
                     FileContent mediaContent = new FileContent(mMimeType, fileContent);
 
                     File body = new File();
+                    List<String> parents = Collections.singletonList(folderId);
+                    body.setParents(parents);
                     body.setName(fileName);
                     body.setMimeType(mMimeType);
 
@@ -99,6 +113,42 @@ public class DriveServiceTask {
                 uploadListener.onCompletion(false,null);
                 Toast.makeText(mContext, "File upload failed", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private String getFolderIdByName(String folderName) {
+        try {
+            FileList fileList = mDriveService.files().list()
+                    .setQ("mimeType='application/vnd.google-apps.folder' and name='" + folderName + "'")
+                    .execute();
+            List<File> folders = fileList.getFiles();
+            if (folders != null && !folders.isEmpty()) {
+                return folders.get(0).getId();
+            }
+        } catch (IOException e) {
+            Log.d("AAA", e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private String createFolder(String folderName, String parentFolderId) {
+        try {
+            File folderMetadata = new File();
+            folderMetadata.setName(folderName);
+            folderMetadata.setMimeType("application/vnd.google-apps.folder");
+
+            if (parentFolderId != null) {
+                List<String> parents = Collections.singletonList(parentFolderId);
+                folderMetadata.setParents(parents);
+            }
+
+            File createdFolder = mDriveService.files().create(folderMetadata).execute();
+            return createdFolder.getId();
+        } catch (IOException e) {
+            Log.d("AAA", e.getMessage());
+            e.printStackTrace();
+            return null;
         }
     }
 }
