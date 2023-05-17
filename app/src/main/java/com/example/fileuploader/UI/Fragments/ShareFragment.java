@@ -14,8 +14,9 @@ import android.view.LayoutInflater;
 import androidx.annotation.Nullable;
 import android.content.pm.ResolveInfo;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import android.content.pm.PackageManager;
-import com.example.fileuploader.WebViewActivity;
+import androidx.navigation.NavController;
 
 public class ShareFragment extends Fragment {
 
@@ -36,9 +37,12 @@ public class ShareFragment extends Fragment {
         textView.setText(publicUrl);
 
         textView.setOnClickListener(view12 -> {
-            Intent intent = new Intent(getActivity(), WebViewActivity.class);
-            intent.putExtra("publicUrl",publicUrl);
-            startActivity(intent);
+            NavController controller = Navigation.findNavController(getView());
+            Bundle args2 = new WebViewFragmentArgs.Builder()
+                    .setPublicUrl(publicUrl)
+                    .build()
+                    .toBundle();
+            controller.navigate(R.id.webViewFragment,args2);
         });
 
         Button shareButton = getActivity().findViewById(R.id.shareButton);

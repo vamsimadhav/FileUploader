@@ -3,4 +3,12 @@
     <string name="intro">Welcome to File Uploader</string>
     <string name="login">Login</string>
     <string name="to_use_the_app_login">To use the app LogIn</string>
+    <string name="upload_new_file">Upload New File</string>
+    <string name="click_on_url">CLICK ON URL</string>
+    <string name="to_view_the_document">To view the document</string>
+    <string name="share">SHARE</string>
+    <string name="public_url">Public Url</string>
+    <string name="to_share_the_document">To Share the Document</string>
+    <string name="click_on_share_button">CLICK ON SHARE BUTTON</string>
+    <string name="you_can_upload_3_types_of_file_s">You can upload 3 types of file\'s</string>
 </resources>

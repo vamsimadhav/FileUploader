@@ -28,5 +28,20 @@
             android:name="publicUrl"
             app:argType="string"
             android:defaultValue="null" />
+        <action
+            android:id="@+id/action_shareFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.example.fileuploader.UI.Fragments.WebViewFragment"
+        android:label="WebViewFragment" >
+        <action
+            android:id="@+id/action_webViewFragment_to_uploadFragment"
+            app:destination="@id/uploadFragment" />
+        <argument
+            android:name="publicUrl"
+            app:argType="string"
+            android:defaultValue="null" />
     </fragment>
 </navigation>
